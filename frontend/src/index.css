@@ -16,3 +16,12 @@ body { @apply bg-background text-text-primary font-sans; }
   background-clip: text;
   color: transparent;
 }
+/* Infinite horizontal scroll for the feature ticker on the landing page */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  width: max-content;
+  animation: marquee 22s linear infinite;
+}

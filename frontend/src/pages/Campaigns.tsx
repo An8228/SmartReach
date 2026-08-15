@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { fetchCampaigns } from "../api/campaigns";
 import type { Campaign } from "../api/campaigns";
+import { useAuth } from "../context/AuthContext";
+import { MOCK_CAMPAIGNS } from "../data/mockData";
 
 const STATUS_CLASSES: Record<string, string> = {
   active: "text-success bg-success/15",
@@ -9,21 +11,34 @@ const STATUS_CLASSES: Record<string, string> = {
 };
 
 export default function Campaigns() {
+  const { isDemo } = useAuth();
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [openId, setOpenId] = useState<number | null>(null);
 
   useEffect(() => {
+    if (isDemo) {
+      setCampaigns(MOCK_CAMPAIGNS);
+      setLoading(false);
+      return;
+    }
     fetchCampaigns()
       .then(setCampaigns)
       .catch(() => setError("Couldn't load campaigns. Is the backend running?"))
       .finally(() => setLoading(false));
-  }, []);
+  }, [isDemo]);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
-      <h1 className="text-3xl font-extrabold mb-8">Campaigns</h1>
+      <div className="flex items-center gap-3 mb-8">
+        <h1 className="text-3xl font-extrabold">Campaigns</h1>
+        {isDemo && (
+          <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-warning/15 text-warning">
+            Demo Mode — sample data
+          </span>
+        )}
+      </div>
 
       {loading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
