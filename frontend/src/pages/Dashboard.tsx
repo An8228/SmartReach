@@ -1,9 +1,20 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import KpiCard from "../components/KpiCard";
 import { fetchSummary } from "../api/analytics";
 import type { AnalyticsSummary } from "../api/analytics";
 import { useAuth } from "../context/AuthContext";
 import { MOCK_SUMMARY } from "../data/mockData";
+
+const container = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.08 } },
+};
+const item = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0 },
+};
 
 export default function Dashboard() {
   const { isDemo } = useAuth();
@@ -25,13 +36,21 @@ export default function Dashboard() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
-      <div className="flex items-center gap-3 mb-8">
-        <h1 className="text-3xl font-extrabold">Key Metrics</h1>
-        {isDemo && (
-          <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-warning/15 text-warning">
-            Demo Mode — sample data
-          </span>
-        )}
+      <div className="flex items-center justify-between mb-8 flex-wrap gap-3">
+        <div className="flex items-center gap-3">
+          <h1 className="text-3xl font-extrabold">Key Metrics</h1>
+          {isDemo && (
+            <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-warning/15 text-warning">
+              Demo Mode — sample data
+            </span>
+          )}
+        </div>
+        <Link
+          to="/insights"
+          className="text-sm font-medium px-4 py-1.5 rounded-full bg-primary/15 text-primary hover:bg-primary/25 transition-colors"
+        >
+          View AI Insights →
+        </Link>
       </div>
 
       {loading && (
@@ -43,12 +62,25 @@ export default function Dashboard() {
       {error && <div className="text-danger bg-danger/10 border border-danger/30 rounded-lg px-4 py-3 max-w-lg">{error}</div>}
 
       {summary && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <KpiCard label="Total Campaigns" sublabel="Active" value={String(summary.total_campaigns)} accent="primary" />
-          <KpiCard label="Total Spend" sublabel="This Month" value={`$${summary.total_spend.toLocaleString()}`} accent="accent" />
-          <KpiCard label="Total Revenue" sublabel="This Month" value={`$${summary.total_revenue.toLocaleString()}`} accent="success" />
-          <KpiCard label="ROI" sublabel="This Month" value={`${summary.roi}%`} accent="primary" />
-        </div>
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          <motion.div variants={item}>
+            <KpiCard label="Total Campaigns" sublabel="Active" value={String(summary.total_campaigns)} accent="primary" />
+          </motion.div>
+          <motion.div variants={item}>
+            <KpiCard label="Total Spend" sublabel="This Month" value={`$${summary.total_spend.toLocaleString()}`} accent="accent" />
+          </motion.div>
+          <motion.div variants={item}>
+            <KpiCard label="Total Revenue" sublabel="This Month" value={`$${summary.total_revenue.toLocaleString()}`} accent="success" />
+          </motion.div>
+          <motion.div variants={item}>
+            <KpiCard label="ROI" sublabel="This Month" value={`${summary.roi}%`} accent="primary" />
+          </motion.div>
+        </motion.div>
       )}
     </div>
   );

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { fetchCampaigns } from "../api/campaigns";
 import type { Campaign } from "../api/campaigns";
 import { useAuth } from "../context/AuthContext";
@@ -8,6 +9,15 @@ const STATUS_CLASSES: Record<string, string> = {
   active: "text-success bg-success/15",
   paused: "text-warning bg-warning/15",
   completed: "text-text-secondary bg-white/10",
+};
+
+const container = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.06 } },
+};
+const item = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0 },
 };
 
 export default function Campaigns() {
@@ -50,11 +60,22 @@ export default function Campaigns() {
 
       {!loading && !error && campaigns.length === 0 && <p className="text-text-secondary">No campaigns yet.</p>}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <motion.div
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+      >
         {campaigns.map((c) => {
           const isOpen = openId === c.id;
           return (
-            <div key={c.id} className="glass-card p-6 flex flex-col justify-between">
+            <motion.div
+              key={c.id}
+              variants={item}
+              whileHover={{ y: -4, boxShadow: "0 12px 24px rgba(0,0,0,0.25)" }}
+              transition={{ type: "spring", stiffness: 300, damping: 22 }}
+              className="glass-card p-6 flex flex-col justify-between"
+            >
               <div>
                 <div className="flex items-start justify-between mb-2">
                   <h3 className="font-semibold text-lg">{c.name}</h3>
@@ -65,23 +86,31 @@ export default function Campaigns() {
                 <p className="text-sm text-text-secondary">
                   Budget: <span className="text-text-primary font-medium">${c.budget.toLocaleString()}</span>
                 </p>
-                {isOpen && (
-                  <div className="mt-4 pt-4 border-t border-white/10 space-y-1.5 text-sm">
-                    <p className="text-text-secondary">Channel: <span className="text-text-primary capitalize">{c.channel}</span></p>
-                    <p className="text-text-secondary">Spend: <span className="text-text-primary">${c.spend.toLocaleString()}</span></p>
-                    <p className="text-text-secondary">Revenue: <span className="text-text-primary">${c.revenue.toLocaleString()}</span></p>
-                    <p className="text-text-secondary">ROI: <span className="text-success font-medium">{c.roi}%</span></p>
-                  </div>
-                )}
+                <AnimatePresence>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.25, ease: "easeInOut" }}
+                      className="mt-4 pt-4 border-t border-white/10 space-y-1.5 text-sm overflow-hidden"
+                    >
+                      <p className="text-text-secondary">Channel: <span className="text-text-primary capitalize">{c.channel}</span></p>
+                      <p className="text-text-secondary">Spend: <span className="text-text-primary">${c.spend.toLocaleString()}</span></p>
+                      <p className="text-text-secondary">Revenue: <span className="text-text-primary">${c.revenue.toLocaleString()}</span></p>
+                      <p className="text-text-secondary">ROI: <span className="text-success font-medium">{c.roi}%</span></p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
               <button onClick={() => setOpenId(isOpen ? null : c.id)}
                 className="mt-4 self-start px-4 py-1.5 rounded-full text-sm font-medium bg-primary/15 text-primary hover:bg-primary/25 transition-colors">
                 {isOpen ? "Hide Details" : "Check Details"}
               </button>
-            </div>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
     </div>
   );
 }
