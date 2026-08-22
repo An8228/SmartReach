@@ -8,7 +8,8 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Campaigns from "./pages/Campaigns";
 import Insights from "./pages/Insights";
-import ComingSoon from "./pages/ComingSoon";
+import Audiences from "./pages/Audiences";
+import Reports from "./pages/Reports";
 import NotFound from "./pages/NotFound";
 export default function App() {
   return (
@@ -22,8 +23,8 @@ export default function App() {
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/campaigns" element={<ProtectedRoute><Campaigns /></ProtectedRoute>} />
           <Route path="/insights" element={<ProtectedRoute><Insights /></ProtectedRoute>} />
-          <Route path="/audiences" element={<ProtectedRoute><ComingSoon title="Audiences" /></ProtectedRoute>} />
-          <Route path="/reports" element={<ProtectedRoute><ComingSoon title="Reports" /></ProtectedRoute>} />
+          <Route path="/audiences" element={<ProtectedRoute><Audiences /></ProtectedRoute>} />
+          <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

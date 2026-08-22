@@ -65,3 +65,77 @@ export const MOCK_INSIGHTS: AiInsight[] = [
     confidence: 71,
   },
 ];
+
+
+export interface AudienceSegment {
+  id: number;
+  name: string;
+  description: string;
+  size: number;
+  avgLtv: number;
+  growth: number;
+  primaryChannel: string;
+}
+
+export const MOCK_AUDIENCES: AudienceSegment[] = [
+  {
+    id: 1,
+    name: "High-Value Repeat Buyers",
+    description: "Customers with 3+ purchases and above-average order value over the last 6 months.",
+    size: 2140,
+    avgLtv: 486,
+    growth: 12.4,
+    primaryChannel: "email",
+  },
+  {
+    id: 2,
+    name: "Cart Abandoners",
+    description: "Added items to cart in the last 30 days but did not complete checkout.",
+    size: 5320,
+    avgLtv: 0,
+    growth: -3.1,
+    primaryChannel: "display",
+  },
+  {
+    id: 3,
+    name: "Newsletter Subscribers",
+    description: "Opted in to marketing emails but haven't made a first purchase yet.",
+    size: 8760,
+    avgLtv: 62,
+    growth: 8.9,
+    primaryChannel: "email",
+  },
+  {
+    id: 4,
+    name: "Social Media Followers",
+    description: "Engaged with Instagram or brand content in the last 90 days.",
+    size: 14200,
+    avgLtv: 41,
+    growth: 15.7,
+    primaryChannel: "social",
+  },
+  {
+    id: 5,
+    name: "First-Time Visitors",
+    description: "New site visitors in the last 14 days with no prior account history.",
+    size: 3980,
+    avgLtv: 0,
+    growth: 22.3,
+    primaryChannel: "search",
+  },
+];
+
+export interface ReportHistoryItem {
+  id: number;
+  name: string;
+  type: "weekly" | "monthly" | "campaign" | "revenue";
+  dateGenerated: string;
+  period: string;
+}
+
+export const MOCK_REPORT_HISTORY: ReportHistoryItem[] = [
+  { id: 1, name: "Weekly Performance Summary", type: "weekly", dateGenerated: "2026-08-17", period: "Aug 10 - Aug 16, 2026" },
+  { id: 2, name: "Monthly Revenue Report", type: "revenue", dateGenerated: "2026-08-01", period: "July 2026" },
+  { id: 3, name: "Campaign Performance Breakdown", type: "campaign", dateGenerated: "2026-07-28", period: "Q2 2026" },
+  { id: 4, name: "Weekly Performance Summary", type: "weekly", dateGenerated: "2026-08-10", period: "Aug 3 - Aug 9, 2026" },
+];
